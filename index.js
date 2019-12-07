@@ -1,15 +1,15 @@
-const HEIGHT_STEP = 50;
+const HEIGHT_STEP = 10;
 
 const COLORS = {
-  'program': '#444',
-  'file': '#484',
-  'module': '#448',
-  'module-block': '#448',
-  'interface': '#88c',
-  'class': '#8c8',
-  'constructor': '#442',
-  'method': '#884',
-  'function': '#88c',
+  'program': '#000',
+  'file': '#00f',
+  'module': '#00c',
+  'module-block': '#008',
+  'interface': '#0c0',
+  'class': '#0f0',
+  'constructor': '#800',
+  'method': '#c00',
+  'function': '#f00',
 };
 
 main();
