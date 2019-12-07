@@ -1,5 +1,17 @@
 const HEIGHT_STEP = 50;
 
+const COLORS = {
+  'program': '#444',
+  'file': '#484',
+  'module': '#448',
+  'module-block': '#448',
+  'interface': '#88c',
+  'class': '#8c8',
+  'constructor': '#442',
+  'method': '#884',
+  'function': '#88c',
+};
+
 main();
 
 function main() {
@@ -40,8 +52,12 @@ function generateTMap3D(boxes, source) {
 
 function flatten(treemap, boxlist, depth) {
   let { x0, x1, y0, y1 } = treemap;
+  let label = treemap.data.name;
+  let color = COLORS[treemap.data.type] || null;
 
   boxlist.push({
+    color,
+    label,
     x: [x0, x1],
     y: [y0, y1],
     z: [HEIGHT_STEP * depth, HEIGHT_STEP * (depth + 1)],
