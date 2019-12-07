@@ -1,7 +1,8 @@
 const HEIGHT_STEP = 10;
 
 const COLORS = {
-  'program': '#000',
+  'program': '#f0f',
+  'dir': '#0ff',
   'file': '#00f',
   'module': '#00c',
   'module-block': '#008',
