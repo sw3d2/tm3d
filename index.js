@@ -5,20 +5,37 @@ main();
 function main() {
   let filepath = process.argv[2];
   let tmapjson = parseTMap(filepath);
-  let tmap3d = generateBoxes(tmapjson);
+  let boxes = generateBoxes(tmapjson);
+  let tmap3d = generateTMap3D(boxes, filepath);
   console.log(JSON.stringify(tmap3d, null, 2));
 }
 
 function parseTMap(filepath) {
   let fs = require('fs');
-  let json = fs.readFileSync(filepath, 'utf8');
-  return JSON.parse(json);
+  let json = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+  verifyTMap(json);
+  return json.treemap;
+}
+
+function verifyTMap(json) {
+  if (json.type != 'tmap' || json.version != '1.0.0')
+    throw new Error('Invalid TMAP');
 }
 
 function generateBoxes(tmap) {
-  let res = [];
-  flatten(tmap, res, 0);
-  return res;
+  let boxes = [];
+  flatten(tmap, boxes, 0);
+  return boxes;
+}
+
+function generateTMap3D(boxes, source) {
+  return {
+    type: 'tm3d',
+    version: '1.0.0',
+    timestamp: new Date().toJSON(),
+    source,
+    boxes,
+  };
 }
 
 function flatten(treemap, boxlist, depth) {
