@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Compiling...";
+tsc || exit 1;
+echo "Running...";
+sh/cli /tmp/iswaac/json/tmap.json > /tmp/iswaac/json/tm3d.test.json;
