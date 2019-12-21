@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 export interface FileFormat {
   type: 'tm3d',
   version: string,
@@ -105,5 +107,10 @@ function flatten(treemap: TreemapNode, boxes: Box3D[],
 }
 
 function getNodeColor(type: string, colors: HexColors) {
-  return colors[type] || '#' + Math.random().toString(16).slice(2, 2 + 6);
+  let color = colors[type];
+  if (color) return color;
+  let hash = crypto.createHash('sha256').update(type).digest();
+  color = '#' + hash.toString('hex').slice(0, 6);
+  colors[type] = color;
+  return color;
 }
