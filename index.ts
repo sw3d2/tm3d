@@ -29,33 +29,25 @@ interface TreemapNode {
   children?: TreemapNode[];
 }
 
-const COLORS = {
-  'program': '#f0f',
-  'dir': '#0ff',
-  'file': '#00f',
-  'module': '#00c',
-  'interface': '#0c0',
-  'class': '#0f0',
-  'constructor': '#800',
-  'method': '#c00',
-  'function': '#f00',
-};
+interface HexColors {
+  [nodeType: string]: string;
+}
 
 main();
 
 function main() {
   let filepath = process.argv[2];
-  let tmapjson = parseTMap(filepath);
-  let boxes = generateBoxes(tmapjson);
+  let [treemap, colors] = parseTMap(filepath);
+  let boxes = generateBoxes(treemap, colors || {});
   let tmap3d = generateTMap3D(boxes, filepath);
   console.log(JSON.stringify(tmap3d, null, 2));
 }
 
-function parseTMap(filepath): TreemapNode {
+function parseTMap(filepath): [TreemapNode, HexColors] {
   let fs = require('fs');
   let json = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   verifyTMap(json);
-  return json.treemap;
+  return [json.treemap, json.colors];
 }
 
 function verifyTMap(json) {
@@ -63,10 +55,10 @@ function verifyTMap(json) {
     throw new Error('Invalid TMAP');
 }
 
-function generateBoxes(tmap): Box3D[] {
+function generateBoxes(tmap: TreemapNode, colors: HexColors): Box3D[] {
   let boxes: Box3D[] = [];
   setNodeIds(tmap, 1);
-  flatten(tmap, boxes);
+  flatten(tmap, boxes, colors);
   return boxes;
 }
 
@@ -91,11 +83,11 @@ function setNodeIds(treemap: TreemapNode, minid: number) {
 }
 
 function flatten(treemap: TreemapNode, boxes: Box3D[],
-  depth = 0, parent: TreemapNode | null = null) {
+  colors: HexColors, depth = 0, parent: TreemapNode | null = null) {
 
   let { x0, x1, y0, y1 } = treemap;
   let label = treemap.data.name;
-  let color = COLORS[treemap.data.type] || null;
+  let color = getNodeColor(treemap.data.type, colors);
   let id = treemap.data.id || 0;
 
   boxes.push({
@@ -109,5 +101,9 @@ function flatten(treemap: TreemapNode, boxes: Box3D[],
   });
 
   for (let subnode of treemap.children || [])
-    flatten(subnode, boxes, depth + 1, treemap);
+    flatten(subnode, boxes, colors, depth + 1, treemap);
+}
+
+function getNodeColor(type: string, colors: HexColors) {
+  return colors[type] || '#' + Math.random().toString(16).slice(2, 2 + 6);
 }

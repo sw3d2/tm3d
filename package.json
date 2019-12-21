@@ -1,7 +1,6 @@
 {
   "name": "webgl-3d-treemap",
-  "version": "1.0.4",
-  "description": "Converts a treemap into a flat list of 3D boxes for WebGL",
+  "version": "1.1.0",
   "bin": "sh/cli",
   "devDependencies": {
     "@types/node": "12.12.17",
