@@ -10,9 +10,10 @@ export interface FileFormat {
 
 export interface Box3D {
   id: number;
+  ref?: string;
   parent: number;
-  color: string | null;
-  label: string | null;
+  color?: string;
+  label?: string;
   x: [number, number];
   y: [number, number];
   z: [number, number];
@@ -25,7 +26,8 @@ interface TreemapNode {
   y1: number;
   data: {
     id?: number;
-    name: string;
+    ref?: string;
+    name?: string;
     type: string;
   };
   children?: TreemapNode[];
@@ -88,12 +90,14 @@ function flatten(treemap: TreemapNode, boxes: Box3D[],
   colors: HexColors, depth = 0, parent: TreemapNode | null = null) {
 
   let { x0, x1, y0, y1 } = treemap;
+  let ref = treemap.data.ref;
   let label = treemap.data.name;
   let color = getNodeColor(treemap.data.type, colors);
   let id = treemap.data.id || 0;
 
   boxes.push({
     id,
+    ref,
     parent: parent?.data.id || 0,
     color,
     label,
